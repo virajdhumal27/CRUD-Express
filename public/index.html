@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .table {
+            border: 2px solid black;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="students">
+            <h1>Get Student</h1>
+            <input type="text" id="txtBox"/>
+            <button type="submit" onclick="getStudent()">Submit</button>
+        </div>
+        
+        <div class="students">
+            <h1>Get All Students</h1>
+            <button type="submit" onclick="getAllStudents()">Submit</button>
+        </div>
+
+        <div class="students">
+            <h1>Post Student</h1>
+            <input type="text" id="txtBoxName" placeholder="Name"/>
+            <input type="text" id="txtBoxDept" placeholder="Department"/>
+            <button type="submit" onclick="postStudent()">Submit</button>
+        </div>
+
+        <div class="students">
+            <h1>Update Student</h1>
+            <input type="text" id="txtBoxUpdateID" placeholder="ID"/>
+            <input type="text" id="txtBoxUpdateName" placeholder="Name"/>
+            <input type="text" id="txtBoxUpdateDept" placeholder="Department"/>
+            <button type="submit" onclick="updateStudent()">Submit</button>
+        </div>
+
+        <div class="output">
+            <table class="table" id="table">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Department</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+<script>
+
+    async function getStudent() {
+        let id = document.getElementById('txtBox').value;
+        console.log('Id requested: ' + id);
+        const response = await fetch(`/getStudent/${id}`);
+        const data = await response.json();
+        console.log(data);
+
+        const table = document.getElementById('table');
+        
+        const row = table.insertRow(-1);
+
+        const cell0 = row.insertCell(0);
+        const cell1 = row.insertCell(1);
+        const cell2 = row.insertCell(2);
+
+        const row_id = data._id;
+        const row_name = data.name;
+        const row_dept = data.department;
+
+        cell0.innerHTML = row_id;
+        cell1.innerHTML = row_name;
+        cell2.innerHTML = row_dept;
+    }
+
+    async function getAllStudents() {
+        console.log('All Studnets requested');
+        const response = await fetch(`/getStudents`);
+        const data = await response.json();
+        console.log(data);
+
+        const table = document.getElementById('table');
+
+        for(let i = 0; i < data.length; i++) {
+            const row = table.insertRow(-1);
+
+            const cell0 = row.insertCell(0);
+            const cell1 = row.insertCell(1);
+            const cell2 = row.insertCell(2);
+
+            const row_id = data[i]._id;
+            const row_name = data[i].name;
+            const row_dept = data[i].department;
+
+            cell0.innerHTML = row_id;
+            cell1.innerHTML = row_name;
+            cell2.innerHTML = row_dept;
+        }
+    }
+
+    async function postStudent() {
+        const name = document.getElementById('txtBoxName').value;
+        const department = document.getElementById('txtBoxDept').value;
+
+        const requestData = {name, department};
+
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        };
+
+        const response = await fetch('/addStudent', options);
+        const data = await response.json();
+        console.log(data);
+    }
+
+    async function updateStudent() {
+        const id = document.getElementById('txtBoxUpdateID').value;
+        const name = document.getElementById('txtBoxUpdateName').value;
+        const department = document.getElementById('txtBoxUpdateDept').value;
+
+        const requestData = {id, name, department};
+
+        const options = {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        };
+
+        const response = await fetch('/updateStudent', options);
+        const data = await response.json();
+        console.log(data);
+    }
+
+</script>
+</html>
