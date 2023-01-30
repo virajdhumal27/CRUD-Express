@@ -15,6 +15,12 @@
             border: 2px solid black;
         }
 
+        .students, .output {
+            margin: 2rem;
+            padding: 1rem;
+            border: 2px solid black;
+        }
+
         
     </style>
 </head>
@@ -29,6 +35,7 @@
         <div class="students">
             <h1>Get All Students</h1>
             <button type="submit" onclick="getAllStudents()">Submit</button>
+            <p id="status"></p>
         </div>
 
         <div class="students">
@@ -47,7 +54,7 @@
         </div>
 
         <div class="output">
-            <table class="table" id="table">
+            <table class="table" id="table" border="1px solid black">
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
@@ -89,18 +96,20 @@
         const data = await response.json();
         console.log(data);
 
+        document.getElementById('status').innerHTML = data.message;
+
         const table = document.getElementById('table');
 
-        for(let i = 0; i < data.length; i++) {
+        for(let i = 0; i < data.students.length; i++) {
             const row = table.insertRow(-1);
 
             const cell0 = row.insertCell(0);
             const cell1 = row.insertCell(1);
             const cell2 = row.insertCell(2);
 
-            const row_id = data[i]._id;
-            const row_name = data[i].name;
-            const row_dept = data[i].department;
+            const row_id = data.students[i]._id;
+            const row_name = data.students[i].name;
+            const row_dept = data.students[i].department;
 
             cell0.innerHTML = row_id;
             cell1.innerHTML = row_name;

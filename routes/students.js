@@ -21,7 +21,12 @@ router.get('/getStudent/:id', async(req, res)=> {
 router.get('/getStudents', async(req,res) => {
     try {
         const students = await Student.find();
-        res.json(students);
+        const result = {
+            students: students,
+            status: 200,
+            message: "All students retrived!"
+        };
+        res.json(result);
     } catch(err) {
         res.send('Error: ' + err);
     }
@@ -68,7 +73,7 @@ router.patch('/updateStudent', async(req, res) => {
             await student.save();
             res.json({
                 status: 200,
-                message: `Student of id: ${req.body.in} is updated!`
+                message: `Student of id: ${req.body.id} is updated!`
             });
         }
     } catch (err) {
